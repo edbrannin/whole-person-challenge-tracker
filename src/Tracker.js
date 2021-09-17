@@ -1,4 +1,9 @@
 import useTracker from './useTracker';
+import { differenceInCalendarDays } from 'date-fns'
+
+const CHALLENGE_START_DAY = new Date('2021-09-07');
+const CHALLENGE_END_DAY = new Date('2021-11-06');
+const CHALLENGE_LENGTH_DAYS = differenceInCalendarDays(CHALLENGE_END_DAY, CHALLENGE_START_DAY);
 
 const Tracker = () => {
   const {
@@ -9,11 +14,16 @@ const Tracker = () => {
     percentComplete,
   } = useTracker();
 
+
+  const daysRemaining = differenceInCalendarDays(CHALLENGE_END_DAY, new Date());
+  const challengePercent = Math.round((CHALLENGE_LENGTH_DAYS - daysRemaining) / CHALLENGE_LENGTH_DAYS * 1000) / 10;
+
   return (
     <div>
       <h2>
         {percentComplete}% Complete!
       </h2>
+      <p>{daysRemaining} days to go!  The challenge is {challengePercent}% complete.</p>
       <div>
         <label>
           Goal:
@@ -29,7 +39,9 @@ const Tracker = () => {
       </div>
       <div>
         <label>
-          Amounts: Total {totalAmount}
+          Amounts:
+          <br/>
+          Total {totalAmount}
           {amountsCount <= 2 && (
             <div>Add your workout amounts, one day per line</div>
           )}
