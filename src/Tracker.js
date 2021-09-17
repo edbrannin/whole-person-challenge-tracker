@@ -1,5 +1,7 @@
 import useTracker from './useTracker';
 import { differenceInCalendarDays } from 'date-fns'
+import useWindowSize from 'react-use/lib/useWindowSize'
+import Confetti from 'react-confetti'
 
 const CHALLENGE_START_DAY = new Date('2021-09-07');
 const CHALLENGE_END_DAY = new Date('2021-11-06');
@@ -14,12 +16,19 @@ const Tracker = () => {
     percentComplete,
   } = useTracker();
 
+  const { width, height } = useWindowSize()
 
   const daysRemaining = differenceInCalendarDays(CHALLENGE_END_DAY, new Date());
   const challengePercent = Math.round((CHALLENGE_LENGTH_DAYS - daysRemaining) / CHALLENGE_LENGTH_DAYS * 1000) / 10;
 
   return (
     <div>
+      {percentComplete > 100 && (
+        <Confetti
+          width={width}
+          height={height}
+        />
+      )}
       <h2>
         {percentComplete}% Complete!
       </h2>
