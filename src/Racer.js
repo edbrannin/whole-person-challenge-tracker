@@ -6,9 +6,10 @@ const Wrapper = styled.div`
 
 const Bar = styled.div`
   position: relative;
-  width: ${props => props.percent}%;
+  width: ${props => Math.min(props.percent, 100)}%;
+  max-width: 100%;
   overflow: visible;
-  background-color: ${props => props.color || 'green'};
+  background-color: ${props => props.percent < 100 ? (props.color || 'green') : 'gold'};
   transition-property: width, background-color;
   transition-duration: 0.5s, 0.5s;
 `;
