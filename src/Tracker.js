@@ -63,7 +63,7 @@ const Tracker = () => {
         <label>
           Amounts:
           <br/>
-          Total {totalAmount}
+          Total {Math.round(totalAmount * 100) / 100}
           {amountsCount <= 2 && (
             <div>Add your workout amounts, one day per line</div>
           )}
