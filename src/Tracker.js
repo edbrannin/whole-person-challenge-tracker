@@ -3,6 +3,8 @@ import useTracker from './useTracker';
 import { differenceInCalendarDays } from 'date-fns'
 import useWindowSize from 'react-use/lib/useWindowSize'
 import Confetti from 'react-confetti'
+import Racetrack from './Racetrack';
+import Racer from './Racer';
 
 const CHALLENGE_START_DAY = new Date('2021-09-07');
 const CHALLENGE_END_DAY = new Date('2021-11-06');
@@ -78,6 +80,10 @@ const Tracker = () => {
           <br />
         </label>
       </div>
+      <Racetrack>
+        <Racer name="You" percent={percentComplete} color={percentComplete > challengePercent ? 'lightblue' : 'pink'}/>
+        <Racer name="Challenge" percent={challengePercent} color="lightgray"/>
+      </Racetrack>
     </div>
   )
 }
