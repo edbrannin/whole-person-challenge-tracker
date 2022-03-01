@@ -13,6 +13,9 @@ export const hoursBelowValue = (valueString, maxHours = 100) => {
 
 const LINE_REGEX = /(\d+)(\*)?/;
 export const parseLine = (line) => {
+  if (!line) {
+    return 0;
+  }
   const [, number, buddy] = LINE_REGEX.exec(line);
   if (buddy) {
     return Number(number) * 2;
@@ -27,7 +30,7 @@ const useTracker = () => {
   const setGoal = (x) => setRawGoal(hoursBelowValue(x));
   const [amountsText, setAmountsText] = useAmountsState('');
   
-  const amountsNumbers = amountsText.split('\n').map(line => parseLine(line)).filter(x => x).map(x => minutesAboveValue(x))
+  const amountsNumbers = amountsText.split('\n').filter(x => x).map(line => parseLine(line)).filter(x => x).map(x => minutesAboveValue(x))
   const amountsCount = amountsNumbers.length;
   const totalAmount = amountsNumbers.reduce((a, b) => a + b, 0);
   const percentComplete = Math.round(totalAmount / goal * 1000) / 10;
