@@ -5,9 +5,10 @@ import useWindowSize from 'react-use/lib/useWindowSize'
 import Confetti from 'react-confetti'
 import Racetrack from './Racetrack';
 import Racer from './Racer';
+import Duration from './Duration';
 
-const CHALLENGE_START_DAY = new Date('2021-09-07');
-const CHALLENGE_END_DAY = new Date('2021-11-06');
+const CHALLENGE_START_DAY = new Date('2022-02-01');
+const CHALLENGE_END_DAY = new Date('2022-03-31');
 const CHALLENGE_LENGTH_DAYS = differenceInCalendarDays(CHALLENGE_END_DAY, CHALLENGE_START_DAY);
 
 // Update the number of days remaining every hour
@@ -59,13 +60,15 @@ const Tracker = () => {
               setGoal(e.target.value);
             }}
           />
+          <br />
+          (<Duration minutes={goal} />)
         </label>
       </div>
       <div>
         <label>
           Amounts:
           <br/>
-          Total {Math.round(totalAmount * 100) / 100}
+          Total: <Duration minutes={totalAmount} />
           {amountsCount <= 2 && (
             <div>Add your workout amounts, one day per line</div>
           )}
@@ -78,12 +81,20 @@ const Tracker = () => {
             rows={amountsText.split('\n').length + 2}
           ></textarea>
           <br />
+          Mark Buddy Workouts like <tt>45*</tt>
         </label>
       </div>
       <Racetrack>
         <Racer name="You" percent={percentComplete} color={percentComplete > challengePercent ? 'lightblue' : 'pink'}/>
         <Racer name="Challenge" percent={challengePercent} color="lightgray"/>
       </Racetrack>
+      <div>
+        <p>
+          To finish, average {Math.round((goal - totalAmount) / daysRemaining)} minutes per day.
+          <br />
+          (or half that, with buddy hours)
+        </p>
+      </div>
     </div>
   )
 }

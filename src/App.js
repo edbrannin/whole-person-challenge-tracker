@@ -5,7 +5,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        53:54 Tracker
+        Guts &amp; Glory Tracker
       </header>
       <Tracker />
     </div>
