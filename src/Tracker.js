@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import useTracker from './useTracker';
-import { differenceInCalendarDays } from 'date-fns'
+import { differenceInCalendarDays, differenceInBusinessDays } from 'date-fns'
 import useWindowSize from 'react-use/lib/useWindowSize'
 import Confetti from 'react-confetti'
 import Racetrack from './Racetrack';
@@ -10,6 +10,7 @@ import Duration from './Duration';
 const CHALLENGE_START_DAY = new Date('2022-02-01');
 const CHALLENGE_END_DAY = new Date('2022-03-31');
 const CHALLENGE_LENGTH_DAYS = differenceInCalendarDays(CHALLENGE_END_DAY, CHALLENGE_START_DAY);
+
 
 // Update the number of days remaining every hour
 const DAYS_LEFT_INTERVAL_MILLIS = 60 * 60 * 1000;
@@ -27,9 +28,12 @@ const Tracker = () => {
 
   const getDaysRemaining = () => differenceInCalendarDays(CHALLENGE_END_DAY, new Date());
   const [daysRemaining, setDaysRemaining] = useState(getDaysRemaining());
+  const getBusinessDaysRemaining = () => differenceInBusinessDays(CHALLENGE_END_DAY, new Date());
+  const [businessDaysRemaining, setBusinessDaysRemaining] = useState(getBusinessDaysRemaining());
   useEffect(() => {
     const interval = setInterval(
       () => setDaysRemaining(getDaysRemaining()),
+      () => setBusinessDaysRemaining(getBusinessDaysRemaining()),
       DAYS_LEFT_INTERVAL_MILLIS,
     )
     return () => clearInterval(interval);
@@ -48,7 +52,11 @@ const Tracker = () => {
       <h2>
         {percentComplete}% Complete!
       </h2>
-      <p>{daysRemaining} days to go!  The challenge is {challengePercent}% complete.</p>
+      <p>
+        {daysRemaining} days to go!  The challenge is {challengePercent}% complete.
+        <br/>
+        (That's {businessDaysRemaining} business days)
+      </p>
       <div>
         <label>
           Goal:
@@ -91,6 +99,8 @@ const Tracker = () => {
       <div>
         <p>
           To finish, average {Math.round((goal - totalAmount) / daysRemaining)} minutes per day.
+          <br />
+          (or {Math.round((goal - totalAmount) / businessDaysRemaining)} minutes per business day)
           <br />
           (or half that, with buddy hours)
         </p>
