@@ -2048,6 +2048,13 @@
   dependencies:
     source-map "^0.6.1"
 
+"@types/use-persisted-state@^0.3.1":
+  version "0.3.1"
+  resolved "https://bandwidth.jfrog.io/bandwidth/api/npm/forge-npm/@types/use-persisted-state/-/use-persisted-state-0.3.1.tgz#a630fa77ed628ec12a80f0a597b6daf6a48f6237"
+  integrity sha512-GZtzdCPeR+KZfrzKrVLnbpRcHSCVDHaFCJ0QtkXDAmh5M+eUJqGquFtN+eUOvAMIjwLgTZ2zKq0/JL+e1/gf8g==
+  dependencies:
+    "@types/react" "*"
+
 "@types/webpack-sources@*":
   version "3.2.0"
   resolved "https://bandwidth.jfrog.io/bandwidth/api/npm/forge-npm/@types/webpack-sources/-/webpack-sources-3.2.0.tgz#16d759ba096c289034b26553d2df1bf45248d38b"

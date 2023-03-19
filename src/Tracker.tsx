@@ -7,8 +7,8 @@ import Racetrack from './Racetrack';
 import Racer from './Racer';
 import Duration from './Duration';
 
-const CHALLENGE_START_DAY = new Date('2022-02-01');
-const CHALLENGE_END_DAY = new Date('2022-03-31');
+const CHALLENGE_START_DAY = new Date('2023-02-01');
+const CHALLENGE_END_DAY = new Date('2023-04-04');
 const CHALLENGE_LENGTH_DAYS = differenceInCalendarDays(CHALLENGE_END_DAY, CHALLENGE_START_DAY);
 
 

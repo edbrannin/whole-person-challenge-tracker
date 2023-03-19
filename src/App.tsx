@@ -4,9 +4,9 @@ import './App.css';
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        Guts &amp; Glory Tracker
-      </header>
+        <header className="App-header">
+          Bandwidth Challenge Tracker
+        </header>
       <Tracker />
     </div>
   );
