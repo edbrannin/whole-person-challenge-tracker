@@ -4,7 +4,7 @@ const Wrapper = styled.div`
   width: 100%;
 `;
 
-const Bar = styled.div`
+const Bar = styled.div<{ percent: number }>`
   position: relative;
   width: ${props => Math.min(props.percent, 100)}%;
   max-width: 100%;
@@ -14,7 +14,17 @@ const Bar = styled.div`
   transition-duration: 0.5s, 0.5s;
 `;
 
-const Racer = ({ name, percent, color }) => (
+const Racer = (
+  {
+    name,
+    percent,
+    color
+  } : {
+    name: string,
+    percent: number,
+    color: string,
+  }
+) => (
   <Wrapper>
     <Bar percent={percent} color={color}>
       {name}
