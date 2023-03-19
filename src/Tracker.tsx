@@ -6,6 +6,7 @@ import Confetti from 'react-confetti'
 import Racetrack from './Racetrack';
 import Racer from './Racer';
 import Duration from './Duration';
+import WorkoutInput from './WorkoutInput';
 
 const CHALLENGE_START_DAY = new Date('2023-02-01');
 const CHALLENGE_END_DAY = new Date('2023-04-04');
@@ -18,7 +19,9 @@ const DAYS_LEFT_INTERVAL_MILLIS = 60 * 60 * 1000;
 const Tracker = () => {
   const {
     goal, setGoal,
-    amountsText, setAmountsText,
+    workouts, setWorkouts,
+    addWorkout, removeWorkout, changeWorkout,
+    trackingMode, setTrackingModeHours, setTrackingModeMiles,
     amountsCount,
     totalAmount,
     percentComplete,
@@ -31,11 +34,10 @@ const Tracker = () => {
   const getBusinessDaysRemaining = () => differenceInBusinessDays(CHALLENGE_END_DAY, new Date());
   const [businessDaysRemaining, setBusinessDaysRemaining] = useState(getBusinessDaysRemaining());
   useEffect(() => {
-    const interval = setInterval(
-      () => setDaysRemaining(getDaysRemaining()),
-      () => setBusinessDaysRemaining(getBusinessDaysRemaining()),
-      DAYS_LEFT_INTERVAL_MILLIS,
-    )
+    const interval = setInterval(() => {
+      setDaysRemaining(getDaysRemaining())
+      setBusinessDaysRemaining(getBusinessDaysRemaining())
+    }, DAYS_LEFT_INTERVAL_MILLIS);
     return () => clearInterval(interval);
   });
 
@@ -65,7 +67,10 @@ const Tracker = () => {
             type="text"
             defaultValue={goal}
             onChange={(e) => {
-              setGoal(e.target.value);
+              const newValue = Number(e.target.value);
+              if (!Number.isNaN(newValue)) {
+                setGoal(Number(e.target.value));
+              }
             }}
           />
           <br />
@@ -81,15 +86,21 @@ const Tracker = () => {
             <div>Add your workout amounts, one day per line</div>
           )}
           <br />
-          <textarea
-            onChange={(e) => {
-              setAmountsText(e.target.value);
-            }}
-            defaultValue={amountsText}
-            rows={amountsText.split('\n').length + 2}
-          ></textarea>
+          <WorkoutInput
+            workouts={workouts}
+            setWorkouts={setWorkouts}
+            /*
+            addWorkout={addWorkout}
+            removeWorkout={removeWorkout}
+            changeWorkout={changeWorkout}
+            trackingMode={trackingMode}
+            */
+          />
+          
           <br />
-          Mark Buddy Workouts like <tt>45*</tt>
+          Mark Buddy Workouts like <span style={{
+            fontFamily: 'monospace',
+          }}>45*</span>
         </label>
       </div>
       <Racetrack>

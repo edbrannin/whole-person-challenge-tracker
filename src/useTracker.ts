@@ -1,45 +1,45 @@
 import createPersistedState from 'use-persisted-state';
 
 const useGoalState = createPersistedState('goal');
-const useAmountsState = createPersistedState('amounts');
+const useWorkoutsState = createPersistedState('workouts');
+const useTrackingMode = createPersistedState('tracking-mode');
 
-export const hoursBelowValue = (valueString, maxHours = 100) => {
-  const value = Number(valueString);
-  if (value > maxHours) {
-    return value;
-  }
-  return value * 60;
+export type Workout = {
+  date?: string
+  amount: number
+  activity?: string
+  isBuddyWorkout: boolean
 }
-
-const LINE_REGEX = /(\d+)(\*)?/;
-export const parseLine = (line) => {
-  if (!line) {
-    return 0;
-  }
-  const [, number, buddy] = LINE_REGEX.exec(line);
-  if (buddy) {
-    return Number(number) * 2;
-  }
-  return Number(number);
-}
-
-const minutesAboveValue = (valueString, minMinutes = 25) => hoursBelowValue(valueString, minMinutes);
 
 const useTracker = () => {
-  const [goal, setRawGoal] = useGoalState(100);
-  const setGoal = (x) => setRawGoal(hoursBelowValue(x));
-  const [amountsText, setAmountsText] = useAmountsState('');
+  const [goal, setGoal] = useGoalState(100) as [number, (goal: number) => void];
+  const [workouts, setWorkouts] = useWorkoutsState([]) as [Workout[], (workouts: Workout[]) => void];
+  const [trackingMode, setTrackingMode] = useTrackingMode('hours') as [string, (newValue: string) => void]
+
+  const setTrackingModeHours = () => setTrackingMode('hours');
+  const setTrackingModeMiles = () => setTrackingMode('miles');
+
+  const addWorkout = (newWorkout: Workout) => setWorkouts([...workouts, newWorkout]) // TODO Sort by date
+  const changeWorkout = (newWorkout: Workout, index: number) => setWorkouts([
+    ...workouts.slice(0, index),
+    newWorkout,
+    ...workouts.slice(index),
+  ]);
+  const removeWorkout = (index: number) => setWorkouts([
+    ...workouts.slice(0, index),
+    ...workouts.slice(index),
+  ]);
   
-  const amountsNumbers = amountsText.split('\n').filter(x => x).map(line => parseLine(line)).filter(x => x).map(x => minutesAboveValue(x))
-  const amountsCount = amountsNumbers.length;
+  const amountsNumbers = workouts.map(({ amount, isBuddyWorkout }) => isBuddyWorkout ? amount * 2: amount);
+  const amountsCount = workouts.length;
   const totalAmount = amountsNumbers.reduce((a, b) => a + b, 0);
   const percentComplete = Math.round(totalAmount / goal * 1000) / 10;
 
-
-
   return {
     goal, setGoal,
-    amountsText, setAmountsText,
+    trackingMode, setTrackingModeHours, setTrackingModeMiles,
+    workouts, setWorkouts,
+    addWorkout, removeWorkout, changeWorkout,
     amountsCount,
     totalAmount,
     percentComplete,
