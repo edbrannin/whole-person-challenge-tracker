@@ -8,6 +8,9 @@ function App() {
           Bandwidth Challenge Tracker
         </header>
       <Tracker />
+      <footer>
+        Not associated with Bandwidth.com
+      </footer>
     </div>
   );
 }

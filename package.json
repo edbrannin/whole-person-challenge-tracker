@@ -1,6 +1,7 @@
 {
-  "name": "53-54-tracker",
-  "version": "0.1.0",
+  "name": "bandwidth-challenge-tracker",
+  "description": "Progress tracker for Bandwidth Body/Mind/Spirit challenges",
+  "version": "0.2.0",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.4",
