@@ -1,10 +1,11 @@
 import styled from 'styled-components';
 
 const Racetrack = styled.div`
-  width: 100%;
+  width: 95%;
+  margin: 1em;
+  border: 2px solid gray;
   display: flex;
   flex-direction: column;
-  padding-top: 1em;
 `;
 
 export default Racetrack;

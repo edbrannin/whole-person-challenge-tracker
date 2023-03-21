@@ -1,17 +1,17 @@
-import { useState, useEffect } from 'react';
-import useTracker from './useTracker';
+import { useState, useEffect, useRef } from 'react';
+import useTracker, { TrackingUnit } from './useTracker';
 import { differenceInCalendarDays, differenceInBusinessDays } from 'date-fns'
 import useWindowSize from 'react-use/lib/useWindowSize'
 import Confetti from 'react-confetti'
 import Racetrack from './Racetrack';
 import Racer from './Racer';
-import Duration from './Duration';
-import WorkoutInput from './WorkoutInput';
+import TrackingAmount from './TrackingAmount';
+import WorkoutsInput from './WorkoutsInput';
+import UnitPicker from './UnitPicker';
 
-const CHALLENGE_START_DAY = new Date('2023-02-01');
+const CHALLENGE_START_DAY = new Date('2023-02-14');
 const CHALLENGE_END_DAY = new Date('2023-04-04');
 const CHALLENGE_LENGTH_DAYS = differenceInCalendarDays(CHALLENGE_END_DAY, CHALLENGE_START_DAY);
-
 
 // Update the number of days remaining every hour
 const DAYS_LEFT_INTERVAL_MILLIS = 60 * 60 * 1000;
@@ -19,13 +19,16 @@ const DAYS_LEFT_INTERVAL_MILLIS = 60 * 60 * 1000;
 const Tracker = () => {
   const {
     goal, setGoal,
+    goalUnit, setGoalUnit,
     workouts, setWorkouts,
     addWorkout, removeWorkout, changeWorkout,
-    trackingMode, setTrackingModeHours, setTrackingModeMiles,
+    trackingMode, setTrackingModeTime, setTrackingModeDistance,
     amountsCount,
-    totalAmount,
+    goalAmount, totalAmount,
     percentComplete,
   } = useTracker();
+
+  const goalRef = useRef<HTMLInputElement>(null);
 
   const { width, height } = useWindowSize()
 
@@ -42,6 +45,30 @@ const Tracker = () => {
   });
 
   const challengePercent = Math.round((CHALLENGE_LENGTH_DAYS - daysRemaining) / CHALLENGE_LENGTH_DAYS * 1000) / 10;
+
+  const setTrackingUnit = (newUnit: TrackingUnit) => {
+    setGoalUnit(newUnit);
+    if (newUnit === 'minutes' || newUnit === 'hours') {
+      setTrackingModeTime();
+    } else if (newUnit === 'miles' || newUnit === 'kilometers') {
+      setTrackingModeDistance();
+    }
+  }
+
+  const updateGoal = (inputText: string) => {
+    const amount = Number(inputText);
+    if (!Number.isNaN(amount)) {
+      setGoal(amount);
+    }
+  }
+
+  useEffect(() => {
+    if (goalUnit === 'minutes' || goalUnit === 'hours') {
+      setTrackingModeTime();
+    } else if (goalUnit === 'miles' || goalUnit === 'kilometers') {
+      setTrackingModeDistance();
+    }
+  }, [goalUnit]);
 
   return (
     <div>
@@ -65,28 +92,25 @@ const Tracker = () => {
           <br />
           <input
             type="text"
+            ref={goalRef}
             defaultValue={goal}
-            onChange={(e) => {
-              const newValue = Number(e.target.value);
-              if (!Number.isNaN(newValue)) {
-                setGoal(Number(e.target.value));
-              }
-            }}
+            onChange={(e) => updateGoal(e.target.value)}
           />
+          <UnitPicker onChange={setTrackingUnit} />
           <br />
-          (<Duration minutes={goal} />)
+          (<TrackingAmount amount={goal} unit={goalUnit} />)
         </label>
       </div>
       <div>
         <label>
-          Amounts:
-          <br/>
-          Total: <Duration minutes={totalAmount} />
-          {amountsCount <= 2 && (
-            <div>Add your workout amounts, one day per line</div>
-          )}
+          <h3>
+            Workouts
+          </h3>
+          <div>
+            Total: <TrackingAmount amount={totalAmount} unit={'minutes'} />
+          </div>
           <br />
-          <WorkoutInput
+          <WorkoutsInput
             workouts={workouts}
             setWorkouts={setWorkouts}
             /*
@@ -96,26 +120,26 @@ const Tracker = () => {
             trackingMode={trackingMode}
             */
           />
-          
-          <br />
-          Mark Buddy Workouts like <span style={{
-            fontFamily: 'monospace',
-          }}>45*</span>
+
         </label>
       </div>
       <Racetrack>
-        <Racer name="You" percent={percentComplete} color={percentComplete > challengePercent ? 'lightblue' : 'pink'}/>
-        <Racer name="Challenge" percent={challengePercent} color="lightgray"/>
+        <Racer name="You" percent={percentComplete} color={`color-mix(in srgb, red ${100 - percentComplete}%, lightblue ${percentComplete}%)`} />
+        <Racer name="Challenge" percent={challengePercent} color="lightgray" />
       </Racetrack>
-      <div>
-        <p>
-          To finish, average {Math.round((goal - totalAmount) / daysRemaining)} minutes per day.
-          <br />
-          (or {Math.round((goal - totalAmount) / businessDaysRemaining)} minutes per business day)
-          <br />
-          (or half that, with buddy hours)
-        </p>
-      </div>
+      {percentComplete >= 100 ? (
+        <h1>A winner is you!</h1>
+      ) : (
+        <div>
+          <p>
+            To finish, average {Math.round((goalAmount - totalAmount) / daysRemaining)} minutes per day.
+            <br />
+            (or {Math.round((goalAmount - totalAmount) / businessDaysRemaining)} minutes per business day)
+            <br />
+            (or half that, with buddy hours)
+          </p>
+        </div>
+      )}
     </div>
   )
 }
