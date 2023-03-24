@@ -69,7 +69,7 @@ const Tracker = () => {
     } else if (goalUnit === 'miles' || goalUnit === 'kilometers') {
       setTrackingModeDistance();
     }
-  }, [goalUnit]);
+  }, [goalUnit, setTrackingModeTime, setTrackingModeDistance]);
 
   return (
     <div>
