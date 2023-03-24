@@ -21,9 +21,10 @@ const Tracker = () => {
     goal, setGoal,
     goalUnit, setGoalUnit,
     workouts, setWorkouts,
-    addWorkout, removeWorkout, changeWorkout,
-    trackingMode, setTrackingModeTime, setTrackingModeDistance,
-    amountsCount,
+    // addWorkout, removeWorkout, changeWorkout,
+    // trackingMode,
+    setTrackingModeTime, setTrackingModeDistance,
+    // amountsCount,
     goalAmount, totalAmount,
     percentComplete,
   } = useTracker();
