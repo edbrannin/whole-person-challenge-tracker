@@ -71,9 +71,11 @@ const Tracker = () => {
     }
   }, [goalUnit, setTrackingModeTime, setTrackingModeDistance]);
 
+  const winner = percentComplete >= 100;
+
   return (
     <div>
-      {percentComplete > 100 && (
+      {winner && (
         <Confetti
           width={width}
           height={height}
@@ -128,7 +130,7 @@ const Tracker = () => {
         <Racer name="You" percent={percentComplete} color={`color-mix(in srgb, red ${100 - percentComplete}%, lightblue ${percentComplete}%)`} />
         <Racer name="Challenge" percent={challengePercent} color="lightgray" />
       </Racetrack>
-      {percentComplete >= 100 ? (
+      {winner ? (
         <h1>A winner is you!</h1>
       ) : (
         <div>
