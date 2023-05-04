@@ -9,8 +9,8 @@ import TrackingAmount from './TrackingAmount';
 import WorkoutsInput from './WorkoutsInput';
 import UnitPicker from './UnitPicker';
 
-const CHALLENGE_START_DAY = new Date('2023-02-14');
-const CHALLENGE_END_DAY = new Date('2023-04-04');
+const CHALLENGE_START_DAY = new Date('2023-05-04');
+const CHALLENGE_END_DAY = new Date('2023-06-29');
 const CHALLENGE_LENGTH_DAYS = differenceInCalendarDays(CHALLENGE_END_DAY, CHALLENGE_START_DAY);
 
 // Update the number of days remaining every hour
