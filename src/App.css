@@ -36,3 +36,10 @@
     transform: rotate(360deg);
   }
 }
+
+@media screen and (prefers-color-scheme: dark) {
+  body {
+    background-color: #222;
+    color: white;
+  }
+}
