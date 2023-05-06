@@ -1,6 +1,10 @@
 import { calculateAmount, TrackingUnit } from "./useTracker";
 
-const TrackingAmount = ({ amount, unit = "hours" }: { amount: number, unit: TrackingUnit }) => {
+const TrackingAmount = ({
+  amount, unit = "hours"
+}: {
+  amount: number, unit: TrackingUnit
+}) => {
   if (unit === "hours" || unit === "minutes") {
     const minutes = calculateAmount(amount, unit);
     return (

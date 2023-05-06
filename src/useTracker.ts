@@ -1,4 +1,5 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useEffectOnce } from 'react-use';
 import createPersistedState from 'use-persisted-state';
 
 const useGoalState = createPersistedState('goal');
@@ -14,6 +15,16 @@ export const goalMultipliers : Record<TrackingUnit, number> = {
 }
 
 export type TrackingUnit = "hours" | "minutes" | "miles" | "kilometers";
+export type TrackingMode = "time" | "distance";
+
+export const TrackingUnitsForMode = (mode: TrackingMode): TrackingUnit[] => {
+  if (mode === 'time') {
+    return ['hours', 'minutes'];
+  } else if (mode === 'distance') {
+    return ['miles', 'kilometers'];
+  }
+  throw new Error(`Invalid TrackingMode: ${mode}`);
+}
 
 export type Workout = {
   date?: string
@@ -22,10 +33,11 @@ export type Workout = {
   activity?: string
   isBuddyWorkout: boolean
   reported: boolean
+  id: number
 }
 
 export const makeWorkout = ({
-  date, amount, unit, activity, isBuddyWorkout, reported
+  date, amount, unit, activity, isBuddyWorkout, reported, id
 }: {
     date?: string,
     amount: number,
@@ -33,8 +45,9 @@ export const makeWorkout = ({
     activity?: string,
     isBuddyWorkout?: boolean,
     reported?: boolean,
+    id: number,
 }): Workout => ({
-  date, amount, unit, activity,
+  date, amount, unit, activity, id,
   isBuddyWorkout: !!isBuddyWorkout,
   reported: !!reported,
 })
@@ -45,38 +58,70 @@ export const calculateAmount = (amount: number, unit?: TrackingUnit) => {
 }
 
 const calculateWorkoutAmount = ({ amount, unit, isBuddyWorkout }: Workout) => {
-  console.log('Workout:', amount, unit, isBuddyWorkout);
   const buddyBonus = isBuddyWorkout ? 2 : 1;
   return calculateAmount(amount, unit) * buddyBonus;
 }
 
 type StateHook<T> = [T, (val: T) => void];
 
+export type AddWorkoutFunc = (workout?: Workout) => void;
+export type ChangeWorkoutFunc = (workout: Workout, id: number) => void;
+export type RemoveWorkoutFunc = (id: number) => void;
+
+const getTodayDateString = () => {
+  const offset = new Date().getTimezoneOffset()
+  const result = new Date(new Date().getTime() - (offset*60*1000))
+  return result.toISOString().split('T')[0]
+}
+
 const useTracker = () => {
   const [goal, setGoal] = useGoalState(100) as StateHook<number>;
   const [goalUnit, setGoalUnit] = useGoalUnitState('hours') as StateHook<TrackingUnit>;
   const [workouts, setWorkouts] = useWorkoutsState([]) as StateHook<Workout[]>;
-  const [trackingMode, setTrackingMode] = useTrackingMode('time') as StateHook<string>;
+  const [trackingMode, setTrackingMode] = useTrackingMode('time') as StateHook<TrackingMode>;
+  const [nextId, setNextId] = useState(() => workouts.map((w, i) => w.id || i + 1).reduce((max: number, id: number) => max > id ? max : id, 0) + 1)
+  const getAndIncrementNextId = () => {
+    const result = nextId;
+    setNextId(result + 1);
+    return result;
+  }
 
   const setTrackingModeTime = () => setTrackingMode('time');
   const setTrackingModeDistance = () => setTrackingMode('distance');
 
-  const addWorkout = (newWorkout: Workout) => setWorkouts([...workouts, newWorkout]) // TODO Sort by date
-  const changeWorkout = (newWorkout: Workout, index: number) => setWorkouts([
-    ...workouts.slice(0, index),
-    newWorkout,
-    ...workouts.slice(index),
-  ]);
-  const removeWorkout = (index: number) => setWorkouts([
-    ...workouts.slice(0, index),
-    ...workouts.slice(index),
+  const addWorkout = (newWorkout?: Workout) => setWorkouts([
+    ...workouts,
+    makeWorkout({
+      ...(newWorkout || {}),
+      activity: newWorkout?.activity || '',
+      date: newWorkout?.date || getTodayDateString(),
+      amount: newWorkout?.amount || 0,
+      unit: newWorkout?.unit || trackingMode === 'time' ? 'minutes' : 'hours',
+      id: getAndIncrementNextId(),
+    }),
   ]);
 
+  // TODO Sort by date
+  const changeWorkout: ChangeWorkoutFunc = (newWorkout: Workout, id: number) => setWorkouts(workouts.map(w => {
+    if (w.id === id) {
+      return newWorkout;
+    }
+    return w;
+  }));
+  const removeWorkout = (id: number) => setWorkouts(workouts.filter(w => w.id !== id));
+
+  useEffectOnce(() => {
+    // Update workouts to all have IDs, if needed
+    if (workouts.filter(w => w.id === undefined).length > 0) {
+      setWorkouts(workouts.map(w => ({
+        ...w,
+        id: w.id || getAndIncrementNextId(),
+      })))
+    }
+  })
+
   const goalAmount = useMemo(() => calculateAmount(goal, goalUnit), [goal, goalUnit]);
-  console.log('goalAmount', goalAmount, goal, goalUnit)
-  
   const amountsNumbers = workouts.map((w) => calculateWorkoutAmount(w));
-  console.log('goalAmount', goalAmount, goal, goalUnit)
 
   const amountsCount = workouts.length;
   const totalAmount = amountsNumbers.reduce((a, b) => a + b, 0);

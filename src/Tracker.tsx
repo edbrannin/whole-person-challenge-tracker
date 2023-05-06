@@ -20,9 +20,9 @@ const Tracker = () => {
   const {
     goal, setGoal,
     goalUnit, setGoalUnit,
-    workouts, setWorkouts,
-    // addWorkout, removeWorkout, changeWorkout,
-    // trackingMode,
+    workouts,
+    addWorkout, removeWorkout, changeWorkout,
+    trackingMode,
     setTrackingModeTime, setTrackingModeDistance,
     // amountsCount,
     goalAmount, totalAmount,
@@ -105,7 +105,6 @@ const Tracker = () => {
         </label>
       </div>
       <div>
-        <label>
           <h3>
             Workouts
           </h3>
@@ -115,16 +114,11 @@ const Tracker = () => {
           <br />
           <WorkoutsInput
             workouts={workouts}
-            setWorkouts={setWorkouts}
-            /*
-            addWorkout={addWorkout}
+            addWorkout={() => addWorkout(undefined)}
             removeWorkout={removeWorkout}
             changeWorkout={changeWorkout}
             trackingMode={trackingMode}
-            */
           />
-
-        </label>
       </div>
       <Racetrack>
         <Racer name="You" percent={percentComplete} color={`color-mix(in srgb, red ${100 - percentComplete}%, lightblue ${percentComplete}%)`} />

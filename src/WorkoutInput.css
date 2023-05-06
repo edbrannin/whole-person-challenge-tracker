@@ -1,0 +1,16 @@
+.WorkoutInput {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  background-color: darkblue;
+  border-radius: 1em;
+  padding: 1em;
+  color: white;
+  margin: 0.5em auto;
+}
+
+.WorkoutInput .WorkoutInput-LabelInput {
+  display: flex;
+  flex-direction: column;
+  padding: 1em;
+}

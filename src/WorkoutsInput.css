@@ -1,0 +1,11 @@
+.WorkoutsInput {
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.WorkoutsInput > button {
+  padding: 1em;
+  margin: 1em auto;
+}
