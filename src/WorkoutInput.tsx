@@ -33,30 +33,36 @@ const InputWrapper = ({
 
 type HandleChangeFunc = (name: string) => (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
 
-const FormInput = ({
+const FormTextInput = ({
   workout,
   name,
   handleChange,
 }: {
   workout: Workout,
   name: keyof Workout,
-  handleChange: (name: 'isBuddyWorkout' | 'reported') => (e: ChangeEvent<HTMLInputElement>) => void,
+  handleChange: (name: keyof Workout) => (e: ChangeEvent<HTMLInputElement>) => void,
   trackingMode?: TrackingMode,
-}) => {
-  const inputType = inputTypeForWorkout(name);
-  if (inputType === 'checkbox') {
-    return (
-      <InputWrapper name={name}>
-        <input type="checkbox" name={name} checked={Boolean(workout[name])} onChange={handleChange(name)} ></input>
-      </InputWrapper>
-    )
-  }
-  return (
-    <InputWrapper name={name}>
-      <input type={inputType}  name={name} value={String(workout[name])} onChange={handleChange(name)} ></input>
-    </InputWrapper>
-  );
-}
+}) => (
+  <InputWrapper name={name}>
+    <input type={inputTypeForWorkout(name)} name={name} value={String(workout[name])} onChange={handleChange(name)} ></input>
+  </InputWrapper>
+);
+
+
+const FormCheckboxInput = ({
+  workout,
+  name,
+  handleChange,
+}: {
+  workout: Workout,
+  name: keyof Workout,
+  handleChange: (name: 'reported' | 'isBuddyWorkout') => (e: ChangeEvent<HTMLInputElement>) => void,
+  trackingMode?: TrackingMode,
+}) => (
+  <InputWrapper name={name}>
+    <input type="checkbox" name={name} checked={Boolean(workout[name])} onChange={handleChange(name)} ></input>
+  </InputWrapper>
+);
 
 const TrackingUnitInput = ({
   workout,
@@ -106,12 +112,12 @@ const WorkoutInput = ({
 
   return (
     <div className="WorkoutInput">
-      <FormInput workout={workout} handleChange={handleChange} name="date" />
-      <FormInput workout={workout} handleChange={handleChange} name="activity" />
-      <FormInput workout={workout} handleChange={handleChange} name="amount" />
+      <FormTextInput workout={workout} handleChange={handleChange} name="date" />
+      <FormTextInput workout={workout} handleChange={handleChange} name="activity" />
+      <FormTextInput workout={workout} handleChange={handleChange} name="amount" />
       <TrackingUnitInput workout={workout} handleChange={handleChange} trackingMode={trackingMode} />
-      <FormInput workout={workout} handleChange={handleChangeCheckbox} name="isBuddyWorkout" />
-      <FormInput workout={workout} handleChange={handleChangeCheckbox} name="reported" />
+      <FormCheckboxInput workout={workout} handleChange={handleChangeCheckbox} name="isBuddyWorkout" />
+      <FormCheckboxInput workout={workout} handleChange={handleChangeCheckbox} name="reported" />
       <button onClick={() => onDelete()}>Remove</button>
     </div>
   );
