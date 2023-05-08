@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useEffectOnce } from 'react-use';
 import createPersistedState from 'use-persisted-state';
 
