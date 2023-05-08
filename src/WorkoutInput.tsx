@@ -1,5 +1,5 @@
 import { ChangeEvent, ReactElement } from "react";
-import { TrackingMode, TrackingUnit, TrackingUnitsForMode, Workout } from "./useTracker";
+import { TrackingMode, TrackingUnitsForMode, Workout } from "./useTracker";
 
 import './WorkoutInput.css';
 
@@ -55,7 +55,7 @@ const FormCheckboxInput = ({
   handleChange,
 }: {
   workout: Workout,
-  name: keyof Workout,
+  name: 'reported' | 'isBuddyWorkout',
   handleChange: (name: 'reported' | 'isBuddyWorkout') => (e: ChangeEvent<HTMLInputElement>) => void,
   trackingMode?: TrackingMode,
 }) => (
