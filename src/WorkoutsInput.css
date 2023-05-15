@@ -5,6 +5,10 @@
   flex-direction: column;
 }
 
+.WorkoutsInput > table {
+  margin: 0 auto;
+}
+
 .WorkoutsInput > button {
   padding: 1em;
   margin: 1em auto;
