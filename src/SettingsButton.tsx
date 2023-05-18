@@ -27,7 +27,7 @@ const SettingsButton = ({
   }
   return (
     <>
-      <a className="showSettingsButton" onClick={() => setShowSettings(!showSettings)}>⚙️</a>
+      <button className="showSettingsButton" onClick={() => setShowSettings(!showSettings)}>⚙️</button>
       {showSettings && (
         <div>
           <button onClick={handleImport}>Import Settings</button>
