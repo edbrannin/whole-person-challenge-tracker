@@ -8,6 +8,7 @@ import Racer from './Racer';
 import TrackingAmount from './TrackingAmount';
 import WorkoutsInput from './WorkoutsInput';
 import UnitPicker from './UnitPicker';
+import SettingsButton from './SettingsButton';
 
 const CHALLENGE_START_DAY = new Date('2023-05-04');
 const CHALLENGE_END_DAY = new Date('2023-06-29');
@@ -27,6 +28,7 @@ const Tracker = () => {
     // amountsCount,
     goalAmount, totalAmount,
     percentComplete,
+    exportSettings, importSettings,
   } = useTracker();
 
   const goalRef = useRef<HTMLInputElement>(null);
@@ -81,6 +83,7 @@ const Tracker = () => {
           height={height}
         />
       )}
+      <SettingsButton onExportSettings={exportSettings} onImportSettings={importSettings} />
       <h2>
         {percentComplete}% Complete!
       </h2>

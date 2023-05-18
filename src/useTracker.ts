@@ -36,6 +36,13 @@ export type Workout = {
   id: number
 }
 
+export type WorkoutExport = {
+  goal: number,
+  goalUnit: TrackingUnit,
+  workouts: Workout[],
+  trackingMode: TrackingMode,
+}
+
 export const makeWorkout = ({
   date, amount, unit, activity, isBuddyWorkout, reported, id
 }: {
@@ -127,6 +134,30 @@ const useTracker = () => {
   const totalAmount = amountsNumbers.reduce((a, b) => a + b, 0);
   const percentComplete = Math.round(totalAmount / goalAmount * 1000) / 10;
 
+  const exportSettings = () => JSON.stringify({
+    goal,
+    goalUnit,
+    workouts,
+    trackingMode,
+  });
+
+  const importSettings = (exportedSettings: string) => {
+    const parsedSettings = JSON.parse(exportedSettings);
+    const WORKOUT_KEYS: (keyof WorkoutExport)[] = ["goal", "goalUnit", "workouts", "trackingMode"];
+    WORKOUT_KEYS.forEach(key => {
+      if (!parsedSettings[key]) {
+        console.error(`Loaded settings should contain ${key} but does not`, parsedSettings[key], parsedSettings);
+        throw new Error(`Loaded settings should contain ${key} but does not`);
+      }
+    })
+    const { goal, goalUnit, workouts, trackingMode } = parsedSettings;
+    setGoal(goal);
+    setGoalUnit(goalUnit);
+    setWorkouts(workouts);
+    setTrackingMode(trackingMode);
+  };
+
+
   return {
     goal, setGoal,
     goalUnit, setGoalUnit,
@@ -136,6 +167,7 @@ const useTracker = () => {
     amountsCount,
     goalAmount, totalAmount,
     percentComplete,
+    exportSettings, importSettings,
   };
 };
 

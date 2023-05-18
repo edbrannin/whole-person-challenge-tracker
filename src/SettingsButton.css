@@ -1,0 +1,9 @@
+.showSettingsButton {
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+  padding: 1em;
+  background-color: darkblue;
+  border-radius: 0 0 0 1em;
+}
