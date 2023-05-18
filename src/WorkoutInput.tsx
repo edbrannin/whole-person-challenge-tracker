@@ -1,4 +1,4 @@
-import { ChangeEvent, ReactElement } from "react";
+import { ChangeEvent } from "react";
 import { TrackingMode, TrackingUnitsForMode, Workout } from "./useTracker";
 import classnames from 'classnames/dedupe';
 
