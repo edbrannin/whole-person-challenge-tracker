@@ -99,7 +99,7 @@ const Tracker = () => {
           <input
             type="text"
             ref={goalRef}
-            defaultValue={goal}
+            value={goal}
             onChange={(e) => updateGoal(e.target.value)}
           />
           <UnitPicker onChange={setTrackingUnit} />
