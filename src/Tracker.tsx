@@ -9,10 +9,7 @@ import TrackingAmount from './TrackingAmount';
 import WorkoutsInput from './WorkoutsInput';
 import UnitPicker from './UnitPicker';
 import SettingsButton from './SettingsButton';
-
-const CHALLENGE_START_DAY = new Date('2023-05-04');
-const CHALLENGE_END_DAY = new Date('2023-06-29');
-const CHALLENGE_LENGTH_DAYS = differenceInCalendarDays(CHALLENGE_END_DAY, CHALLENGE_START_DAY);
+import { CHALLENGE_END_DAY, CHALLENGE_LENGTH_DAYS } from './challenge';
 
 // Update the number of days remaining every hour
 const DAYS_LEFT_INTERVAL_MILLIS = 60 * 60 * 1000;
